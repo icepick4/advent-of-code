@@ -76,8 +76,12 @@ if __name__ == '__main__':
         print(stacks[infos[1] - 1])
         print('La pile d arrivée : ')
         print(stacks[infos[2] - 1])
+        valuesToMoves = []
         for i in range(infos[0]):
-            stacks[infos[2] - 1].empiler(stacks[infos[1] - 1].depiler())
+            valuesToMoves.append(stacks[infos[1] - 1].depiler())
+        # valuesToMoves = valuesToMoves[::-1] <- keep same order
+        for value in valuesToMoves:
+            stacks[infos[2] - 1].empiler(value)
         print('La pile de départ : ')
         print(stacks[infos[1] - 1])
         print('La pile d arrivée : ')
