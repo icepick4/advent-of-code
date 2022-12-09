@@ -25,7 +25,7 @@ if __name__ == '__main__':
                     top = False
                     break
             for k in range(0, j):
-                if arbres[i][j - k] >= arbres[i][j]:
+                if arbres[i][k] >= arbres[i][j]:
                     left = False
                     break
             for k in range(i + 1, len(arbres)):
@@ -36,7 +36,7 @@ if __name__ == '__main__':
                 if arbres[i][k] >= arbres[i][j]:
                     right = False
                     break
-            print(i, j)
+            print(i, j, arbres[i][j])
             if top:
                 print('visible depuis le haut')
             elif bot:
