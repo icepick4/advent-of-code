@@ -30,8 +30,9 @@ class Tail:
             return True
         elif abs(head.position[0] - self.position[0]) == 1 and abs(head.position[1] - self.position[1]) == 1:
             return True
-        else:
-            return False
+        elif head.position[0] == self.position[0] and head.position[1] == self.position[1]:
+            return True
+        return False
 
     def follow(self, head):
         if head.position[0] > self.position[0]:
@@ -45,7 +46,7 @@ class Tail:
 
 
 if __name__ == '__main__':
-    actions = read_file('input-test.txt')
+    actions = read_file('input.txt')
     values = {
         'U': [0, -1],
         'L': [-1, 0],
@@ -55,18 +56,12 @@ if __name__ == '__main__':
     positions = [[0, 0]]
     head = Head()
     tail = Tail()
-    all_pos = []
     for action in actions:
-        # print(action)
         for _ in range(action[1]):
             head.move(values[action[0]])
-            pos_x, pos_y = tail.get_position()[0], tail.get_position()[1]
-            # print(pos_x, pos_y)
-            # print(head.position)
-            if [pos_x, pos_y] not in positions:
-                positions.append([pos_x, pos_y])
-            all_pos.append([pos_x, pos_y])
             if not tail.is_adjecent(head):
                 tail.follow(head)
-    print(positions)
+            pos_x, pos_y = tail.get_position()[0], tail.get_position()[1]
+            if [pos_x, pos_y] not in positions:
+                positions.append([pos_x, pos_y])
     print(len(positions))
