@@ -9,21 +9,40 @@ def read_file(filename):
 
 
 def check_cycle(cycle):
-    return cycle % 40 == 20
+    return cycle % 40 == 0 and cycle != 0
+
+
+def empty_line():
+    return ['.' for _ in range(40)]
+
+
+def check_register(register, cycle):
+    return register - 1 == cycle % 40 or register + 1 == cycle % 40 or register == cycle % 40
 
 
 if __name__ == '__main__':
     actions = read_file('input.txt')
     CYCLE = 0
-    SUM = 0
     REGISTER = 1
+    crt = [empty_line()]
+    current_line = 0
     for action in actions:
-        CYCLE += 1
         if check_cycle(CYCLE):
-            SUM += REGISTER * CYCLE
+            crt.append(empty_line())
+            current_line += 1
+        if check_register(REGISTER, CYCLE):
+            crt[current_line][CYCLE % 40] = '#'
+        CYCLE += 1
         if action is not None:
-            CYCLE += 1
             if check_cycle(CYCLE):
-                SUM += REGISTER * CYCLE
+                crt.append(empty_line())
+                current_line += 1
+            if check_register(REGISTER, CYCLE):
+                crt[current_line][CYCLE % 40] = '#'
+            CYCLE += 1
             REGISTER += action
-    print(SUM)
+    for line in crt:
+        for char in line:
+            print(char, end=' ')
+        print('\n')
+    print(len(crt))
