@@ -1,3 +1,8 @@
+import sys
+
+sys.set_int_max_str_digits(900000)
+
+
 class Monkey:
     def __init__(self, id, items, test, throw):
         self.items = list(items)
@@ -61,22 +66,18 @@ def read_file(filename):
 def inspect(monkey, monkeys):
     for i in range(len(monkey.items)):
         monkey.counter_inspection += 1
-        print('monkey', monkey.id, 'inspects item', monkey.items[0])
         monkey.items[0] = monkey.operation(monkey.items[0])
-        print('item is now', monkey.items[0])
-        monkey.items[0] = monkey.items[0] // 3
-        print('item is now', monkey.items[0], 'after divide by 3')
+        monkey.items[0] = monkey.items[0] % 9699690
         if monkey.items[0] % monkey.test == 0:
-            print('throwing to monkey', monkey.throw_true)
             monkey.throw_item_to(monkeys[monkey.throw_true])
         else:
-            print('throwing to monkey', monkey.throw_false)
             monkey.throw_item_to(monkeys[monkey.throw_false])
 
 
 if __name__ == '__main__':
     monkeys = read_file('input.txt')
-    for i in range(20):
+    for i in range(10000):
+        print(i)
         for monkey in monkeys:
             if monkey.items != []:
                 inspect(monkey, monkeys)
