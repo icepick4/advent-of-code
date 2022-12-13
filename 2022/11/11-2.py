@@ -1,7 +1,5 @@
 import sys
 
-sys.set_int_max_str_digits(900000)
-
 
 class Monkey:
     def __init__(self, id, items, test, throw):
@@ -64,7 +62,7 @@ def read_file(filename):
 
 
 def inspect(monkey, monkeys):
-    for i in range(len(monkey.items)):
+    for _ in range(len(monkey.items)):
         monkey.counter_inspection += 1
         monkey.items[0] = monkey.operation(monkey.items[0])
         monkey.items[0] = monkey.items[0] % 9699690
@@ -76,8 +74,7 @@ def inspect(monkey, monkeys):
 
 if __name__ == '__main__':
     monkeys = read_file('input.txt')
-    for i in range(10000):
-        print(i)
+    for _ in range(10000):
         for monkey in monkeys:
             if monkey.items != []:
                 inspect(monkey, monkeys)
