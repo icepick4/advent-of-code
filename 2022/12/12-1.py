@@ -46,7 +46,6 @@ def dijkstra(graphe, start, end):
 
 if __name__ == '__main__':
     tab, start, end = read_file('input.txt')
-    current = start
     tab[start[0]][start[1]] = 'a'
     tab[end[0]][end[1]] = 'z'
     graphe = {}
