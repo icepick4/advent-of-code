@@ -59,7 +59,7 @@ def read_file(filename):
 
 
 def inspect(monkey, monkeys):
-    for i in range(len(monkey.items)):
+    for _ in range(len(monkey.items)):
         monkey.counter_inspection += 1
         print('monkey', monkey.id, 'inspects item', monkey.items[0])
         monkey.items[0] = monkey.operation(monkey.items[0])
@@ -76,7 +76,7 @@ def inspect(monkey, monkeys):
 
 if __name__ == '__main__':
     monkeys = read_file('input.txt')
-    for i in range(20):
+    for _ in range(20):
         for monkey in monkeys:
             if monkey.items != []:
                 inspect(monkey, monkeys)
