@@ -26,7 +26,6 @@ def set_rocks(rocks, cave):
         if rocks[i] == []:
             continue
         if rocks[i][0] == rocks[i+1][0]:
-            # print('rocks from', rocks[i], 'to', rocks[i+1])
             if rocks[i][1] < rocks[i+1][1]:
                 for j in range(rocks[i][1], rocks[i+1][1] + 1):
                     cave[j][rocks[i][0]] = '#'
@@ -34,11 +33,7 @@ def set_rocks(rocks, cave):
             else:
                 for j in range(rocks[i][1], rocks[i+1][1] - 1, -1):
                     cave[j][rocks[i][0]] = '#'
-                    if j == 102 and rocks[i][0] == 500:
-                        print(rocks[i], rocks[i+1])
-                        print('errorrrrrrrr')
         else:
-            # print('rocks from', rocks[i], 'to', rocks[i+1])
             if rocks[i][0] < rocks[i+1][0]:
                 for j in range(rocks[i][0], rocks[i+1][0] + 1):
                     cave[rocks[i][1]][j] = '#'
@@ -74,9 +69,9 @@ def can_fall_diagonal_right(x, y, cave):
     return False
 
 
-def fall(x, y, cave):
+def fall(x, y, cave, part):
     if x+1 == len(cave) or y+1 == len(cave[0]):
-        return False
+        return False if part == 1 else [x, y]
     if can_fall(x, y, cave):
         return [x+1, y]
     if can_fall_diagonal_left(x, y, cave):
@@ -86,9 +81,21 @@ def fall(x, y, cave):
     return [x, y]
 
 
+def ending():
+    COUNTER = 0
+    for line in cave:
+        COUNTER += line.count('O')
+    print(COUNTER, 'units of sand come to rest')
+    sys.exit()
+
+
 if __name__ == '__main__':
     rocks, max_x, max_y = read_file('input.txt')
-    cave = [['.' for _ in range(max_x + 1)] for _ in range(max_y + 1)]
+    part = 1
+    if part == 2:
+        cave = [['.' for _ in range(max_x + 150)] for _ in range(max_y + 2)]
+    else:
+        cave = [['.' for _ in range(max_x + 1)] for _ in range(max_y + 1)]
     cave = set_rocks(rocks, cave)
     start = [0, 500]
     cave[0][500] = '+'
@@ -97,14 +104,14 @@ if __name__ == '__main__':
     while True:
         while last_pos != current_pos:
             last_pos = current_pos
-            current_pos = fall(current_pos[0], current_pos[1], cave)
-            if current_pos is False:
-                COUNTER = 0
-                for line in cave:
-                    print(''.join(line[480:]))
-                    COUNTER += line[480:].count('O')
-                print(COUNTER, 'units of sand come to rest')
-                sys.exit()
+            current_pos = fall(current_pos[0], current_pos[1], cave, part)
+            if part == 1:
+                if current_pos is False:
+                    ending()
+            elif part == 2:
+                if current_pos == [0, 500]:
+                    cave[current_pos[0]][current_pos[1]] = 'O'
+                    ending()
         cave[current_pos[0]][current_pos[1]] = 'O'
         current_pos = start
         last_pos = []
