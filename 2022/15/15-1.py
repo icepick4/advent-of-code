@@ -1,3 +1,6 @@
+import sys
+
+
 def read_file(filename):
     with open(filename, 'r') as f:
         temp_coords = []
@@ -29,17 +32,19 @@ def not_beacon(x, y, beacons):
     return True
 
 
-def sensor_area(x, y, distance, beacons):
+def sensor_area(x, y, distance, beacons, y_pos):
     current_pos = [x, y]
     no_beacon = []
-    if current_pos[1] > 2000000:
-        dist = current_pos[1] - 2000000
-    elif current_pos[1] < 2000000:
-        dist = 2000000 - current_pos[1]
-    print(dist, distance)
+    if current_pos[1] > y_pos:
+        dist = current_pos[1] - y_pos
+    elif current_pos[1] < y_pos:
+        dist = y_pos - current_pos[1]
+    else:
+        dist = 0
+    # print(dist, distance)
     if dist >= distance:
         return no_beacon
-    current_pos[1] = 2000000
+    current_pos[1] = y_pos
     current_pos[0] = current_pos[0] - distance + dist
     for _ in range(distance*2 - dist * 2 + 1):
         if not_beacon(current_pos[0], current_pos[1], beacons):
@@ -48,16 +53,41 @@ def sensor_area(x, y, distance, beacons):
     return no_beacon
 
 
+def check_line(no_beacon):
+    for i, beacon in enumerate(no_beacon):
+        if beacon[0] > 0 and beacon[1] < 20:
+            if beacon[0] - 1 != no_beacon[i-1][0] and beacon[1] == no_beacon[i-1][1]:
+                print(beacon[0] - 1, beacon[1])
+                print((beacon[0]-1) * 4000000 + beacon[1])
+                sys.exit()
+
+
 if __name__ == '__main__':
     sensors, beacons = read_file('input.txt')
-    no_beacon = []
-    COUNTER = 0
-    for sensor in sensors:
-        temp_no_beacon = sensor_area(
-            sensor[0][0], sensor[0][1], sensor[1], beacons)
-        no_beacon += temp_no_beacon
-    no_beacon.sort()
-    # remove duplicates
-    no_beacon = [no_beacon[i] for i in range(
-        len(no_beacon)) if i == 0 or no_beacon[i] != no_beacon[i-1]]
-    print(len(no_beacon))
+    COUNTER = 1
+    y_pos = 10
+    while True:
+        print(COUNTER)
+        no_beacon = []
+        for sensor in sensors:
+            temp_no_beacon = sensor_area(
+                sensor[0][0], sensor[0][1], sensor[1], beacons, y_pos + COUNTER)
+            no_beacon += temp_no_beacon
+
+        no_beacon.sort()
+        # remove duplicates
+        no_beacon = [no_beacon[i] for i in range(
+            len(no_beacon)) if i == 0 or no_beacon[i] != no_beacon[i-1]]
+        check_line(no_beacon)
+        no_beacon = []
+        for sensor in sensors:
+            temp_no_beacon = sensor_area(
+                sensor[0][0], sensor[0][1], sensor[1], beacons, y_pos - COUNTER)
+            no_beacon += temp_no_beacon
+
+        no_beacon.sort()
+        # remove duplicates
+        no_beacon = [no_beacon[i] for i in range(
+            len(no_beacon)) if i == 0 or no_beacon[i] != no_beacon[i-1]]
+        check_line(no_beacon)
+        COUNTER += 1
