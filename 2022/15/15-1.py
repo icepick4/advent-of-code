@@ -1,6 +1,4 @@
 def read_file(filename):
-    length_x = 0
-    length_y = 0
     with open(filename, 'r') as f:
         temp_coords = []
         for line in f:
@@ -31,26 +29,19 @@ def not_beacon(x, y, beacons):
     return True
 
 
-def not_sensor(x, y, sensors):
-    for sensor in sensors:
-        if sensor[0][0] == x and sensor[0][1] == y:
-            return False
-    return True
-
-
 def sensor_area(x, y, distance, beacons):
-    # DIRECTIONS = [[1, -1], [1, 1], [-1, 1], [-1, -1]]
-    print('The distance from ', [x, y], 'is : ', distance)
     current_pos = [x, y]
     no_beacon = []
-    if current_pos[1] > 10:
-        dist = current_pos[1] - 10
-    else:
-        dist = 10 - current_pos[1]
-    current_pos[1] = 10
-    current_pos[0] = current_pos[0] - distance
-    print(current_pos[0], distance * 2 - dist * 2 + 1)
-    for i in range(distance * 2 - dist * 2 + 1):
+    if current_pos[1] > 2000000:
+        dist = current_pos[1] - 2000000
+    elif current_pos[1] < 2000000:
+        dist = 2000000 - current_pos[1]
+    print(dist, distance)
+    if dist >= distance:
+        return no_beacon
+    current_pos[1] = 2000000
+    current_pos[0] = current_pos[0] - distance + dist
+    for _ in range(distance*2 - dist * 2 + 1):
         if not_beacon(current_pos[0], current_pos[1], beacons):
             no_beacon.append([current_pos[0], current_pos[1]])
         current_pos[0] += 1
@@ -58,20 +49,15 @@ def sensor_area(x, y, distance, beacons):
 
 
 if __name__ == '__main__':
-    sensors, beacons = read_file('input-test.txt')
+    sensors, beacons = read_file('input.txt')
     no_beacon = []
-    no_beacon = sensor_area(2, 0, 10,  beacons)
     COUNTER = 0
     for sensor in sensors:
-        if sensor[0][0] == 8 and sensor[0][1] == 7:
-            print(sensor[1])
         temp_no_beacon = sensor_area(
             sensor[0][0], sensor[0][1], sensor[1], beacons)
-        for i in temp_no_beacon:
-            if i not in no_beacon:
-                no_beacon.append(i)
+        no_beacon += temp_no_beacon
     no_beacon.sort()
-    for i in no_beacon:
-        print(i)
-
+    # remove duplicates
+    no_beacon = [no_beacon[i] for i in range(
+        len(no_beacon)) if i == 0 or no_beacon[i] != no_beacon[i-1]]
     print(len(no_beacon))
