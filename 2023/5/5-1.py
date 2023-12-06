@@ -36,5 +36,5 @@ if __name__ == '__main__':
                     seed = destination + seed - source
                     break
             result.append(seed)
-        final_seeds = result
-    print(min(final_seeds))
+        seeds = result
+    print(min(seeds))
