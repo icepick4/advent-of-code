@@ -25,10 +25,17 @@ def find_next(lists):
     return lists[0][-1]
 
 
+def find_previous(lists):
+    for i in range(len(lists)-1, 0, -1):
+        print('adding', lists[i-1][0] - lists[i][0], 'into', lists[i-1])
+        lists[i-1].insert(0, lists[i-1][0] - lists[i][0])
+    return lists[0][0]
+
+
 if __name__ == '__main__':
     histories = read_file('input.txt')
     sum = 0
     for history in histories:
         lists = find_lists(history)
-        sum += find_next(lists)
+        sum += find_previous(lists)
     print(sum)
