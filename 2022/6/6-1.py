@@ -1,9 +1,9 @@
 def read_file(filename):
-    string = ''
+    lines = []
     with open(filename, 'r', encoding='utf-8') as f:
         for line in f:
-            string += line
-    return string
+            lines.append(line.strip())
+    return lines
 
 
 if __name__ == '__main__':
