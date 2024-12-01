@@ -1,6 +1,3 @@
-import sys
-
-
 def read_file(filename):
     hands = []
     with open(filename, 'r', encoding='utf-8') as file:
@@ -46,7 +43,7 @@ def is_four_of_a_kind(hand):
     if hand.count('J') == 4:
         return True
     for value in hand:
-        if hand.count(value) + hand.count('J') == 4:
+        if hand.count(value) + hand.count('J') == 4 and value != 'J':
             return True
     return False
     
@@ -59,7 +56,7 @@ def is_full_house(hand):
             joker_count = 0
             first_value = value
             for value in hand:
-                if hand.count(value) == 2 and value != first_value:
+                if hand.count(value) == 2 and value != first_value and value != 'J':
                     return True
     return False
 
@@ -86,8 +83,10 @@ def is_two_pairs(hand):
 
 def is_one_pair(hand):
     for value in hand:
-        if hand.count(value) + hand.count('J') == 2:
+        if hand.count(value) == 2:
             return True
+    if hand.count('J') == 1:
+        return True
     return False
 
 
@@ -104,10 +103,7 @@ def compare_card_value_hands(hand1, hand2):
 
     
 if __name__ == '__main__':
-
     hands = read_file('input.txt')
-    print(is_two_pairs(['J', 'A', '6', '3', '2']))
-    # sys.exit(0)
     for i, hand in enumerate(hands):
         hand['score'] = calculate_hand_score(hand['cards'])
     hands = sorted(hands, key=lambda x: x['score'])
@@ -119,22 +115,6 @@ if __name__ == '__main__':
                     hands[i], hands[j] = hands[j], hands[i]
     total_winnings = 0
     for i, hand in enumerate(hands):
-        # print(hand['cards'],hand['bid'] ,'*', (i+1))
-        if hand['score'] == 7:
-            print('hand', hand['cards'], 'is five of a kind')
-        elif hand['score'] == 6:
-            print('hand', hand['cards'], 'is four of a kind')
-        elif hand['score'] == 5:
-            print('hand', hand['cards'], 'is full house')
-        elif hand['score'] == 4:
-            print('hand', hand['cards'], 'is three of a kind')
-        elif hand['score'] == 3:
-            print('hand', hand['cards'], 'is two pairs')
-        elif hand['score'] == 2:
-            print('hand', hand['cards'], 'is one pair')
-        else:
-            print('hand', hand['cards'], 'is high card')
         score = hand['bid'] * (i+1)
         total_winnings += score
-
     print(total_winnings)
